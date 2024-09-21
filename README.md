@@ -1,6 +1,4 @@
-Here’s the updated version of your **YourWebShield** documentation to include the new feature of redirecting users to a 403 page:
-
----
+[![](https://data.jsdelivr.com/v1/package/gh/peters-web-hosting/yws-js/badge)](https://www.jsdelivr.com/package/gh/peters-web-hosting/yws-js)
 
 # YourWebShield
 
@@ -19,7 +17,7 @@ Here’s the updated version of your **YourWebShield** documentation to include 
 You can include the library in your HTML page using jsDelivr:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/peters-web-hosting/yws-js@1.0.0/yws.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/peters-web-hosting/yws-js@2.0.0/yws.js"></script>
 ```
 
 ## Usage
@@ -73,7 +71,7 @@ Once the script is embedded, you can configure and use the `yourwebshield` funct
 This library is hosted on GitHub and delivered through the jsDelivr CDN for fast, global access. You can embed the latest version using the following URL:
 
 ```
-https://cdn.jsdelivr.net/gh/peters-web-hosting/yws-js@1.0.0/yws.js
+https://cdn.jsdelivr.net/gh/peters-web-hosting/yws-js@2.0.0/yws.js
 ```
 
 ## Contributing
@@ -83,7 +81,3 @@ Feel free to fork the repository and submit pull requests with improvements, bug
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
----
-
-This updated documentation highlights the new feature of **403 page redirection**.

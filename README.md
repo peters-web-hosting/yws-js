@@ -1,4 +1,4 @@
-[![](https://data.jsdelivr.com/v1/package/gh/peters-web-hosting/yws-js/badge)](https://www.jsdelivr.com/package/gh/peters-web-hosting/yws-js)
+[![](https://data.jsdelivr.com/v1/package/gh/peters-web-hosting/yws-js/badge)](https://www.jsdelivr.com/package/gh/peters-web-hosting/yws-js) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/L3L3ZTVH1)
 
 # YourWebShield
 

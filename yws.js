@@ -53,7 +53,7 @@
           if (!data) return; // Exit if no data
           
           const { average_risk, bot_info } = data;
-          if (bot_info === null && average_risk >= riskThreshold) {
+          if (bot_info === null && average_risk > riskThreshold) {
             console.error('Forbidden: Your IP is blocked due to high risk.');
             window.location.href = forbiddenPage;
           } else {

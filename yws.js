@@ -41,7 +41,7 @@
 
     // Function to handle risk check based on IP
     function checkRisk(ip) {
-      fetch(`https://data.yourwebshield.co.uk/api/lookup?ip_address=${ip}`)
+      fetch(`https://data.yourwebshield.co.uk/api/v1/lookup?ip_address=${ip}`)
         .then(response => {
           if (!response.ok) {
             console.warn(`Request failed with status ${response.status}. Skipping risk check.`);

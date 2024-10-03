@@ -13,74 +13,74 @@
     maxRequests = 100,
     windowMs = 15 * 60 * 1000,
     ip = null,
-    forbiddenPage = '/403.html'
+    forbiddenPage = "/403.html",
   } = {}) {
-    const requestKey = 'requestCount';
-    const firstRequestTimeKey = 'firstRequestTime';
+    // Early exit if already on the forbidden page
+    if (window.location.pathname === forbiddenPage) return;
 
-    // Utility to manage rate limiting state
-    const getLocalStorageItem = (key, defaultValue) => parseInt(localStorage.getItem(key)) || defaultValue;
-    const setLocalStorageItem = (key, value) => localStorage.setItem(key, value);
-
+    // Initialize rate limit variables
     const now = Date.now();
-    let requestCount = getLocalStorageItem(requestKey, 0);
-    let firstRequestTime = getLocalStorageItem(firstRequestTimeKey, now);
+    const requestKey = "requestCount";
+    const firstRequestTimeKey = "firstRequestTime";
 
+    // Fetch stored values from localStorage
+    let requestCount = parseInt(localStorage.getItem(requestKey)) || 0;
+    let firstRequestTime =
+      parseInt(localStorage.getItem(firstRequestTimeKey)) || now;
+
+    // Check if the time window has expired
     if (now - firstRequestTime > windowMs) {
-      // Reset rate limiting after time window
-      setLocalStorageItem(requestKey, 0);
-      setLocalStorageItem(firstRequestTimeKey, now);
-      requestCount = 0;
-    } else if (requestCount >= maxRequests) {
-      alert('Too many requests. Please try again later.');
+      requestCount = 0; // Reset counter
+      firstRequestTime = now;
+      localStorage.setItem(firstRequestTimeKey, now);
+    }
+
+    // Increment request count and save it
+    requestCount++;
+    localStorage.setItem(requestKey, requestCount);
+
+    // Exit if too many requests
+    if (requestCount > maxRequests) {
+      window.location.href = forbiddenPageUrl;
       return;
     }
 
-    // Increment request count
-    setLocalStorageItem(requestKey, requestCount + 1);
-
-    // Function to handle risk check based on IP
-    function checkRisk(ip) {
+    // Function to check the risk of the IP
+    const checkRisk = (ip) => {
       fetch(`https://data.yourwebshield.co.uk/api/v1/lookup?ip_address=${ip}`)
-        .then(response => {
-          if (!response.ok) {
-            console.warn(`Request failed with status ${response.status}. Skipping risk check.`);
-            return null;
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (!data) return; // Exit if no data
-          
+        .then((response) => (response.ok ? response.json() : null))
+        .then((data) => {
+          if (!data) return;
+
           const { average_risk, bot_info } = data;
-          if (bot_info === null && average_risk > riskThreshold) {
-            console.error('Forbidden: Your IP is blocked due to high risk.');
+          if (!bot_info && average_risk > riskThreshold) {
             window.location.href = forbiddenPage;
-          } else {
-            console.log('Access granted.');
           }
         })
         .catch(() => {
-          console.warn('Failed to check IP risk. Continuing without blocking.');
+          console.warn("Failed to check IP risk. Skipping blocking.");
         });
-    }
+    };
 
     // Detect IP or use provided IP
-    const detectIp = () => fetch('https://api.ipify.org?format=json')
-      .then(response => {
-        if (!response.ok) {
-          console.warn(`IP detection service failed with status ${response.status}.`);
-          return null;
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (!data) return; // Exit if no data
-        checkRisk(data.ip);
-      })
-      .catch(() => {
-        console.warn('Failed to auto-detect IP. Skipping risk check.');
-      });
+    const detectIp = () => {
+      const cachedIp = sessionStorage.getItem("detectedIp");
+      if (cachedIp) {
+        checkRisk(cachedIp);
+      } else {
+        fetch("https://api.ipify.org?format=json")
+          .then((response) => (response.ok ? response.json() : null))
+          .then((data) => {
+            if (data && data.ip) {
+              sessionStorage.setItem("detectedIp", data.ip);
+              checkRisk(data.ip);
+            }
+          })
+          .catch(() => {
+            console.warn("Failed to detect IP.");
+          });
+      }
+    };
 
     ip ? checkRisk(ip) : detectIp();
   }
